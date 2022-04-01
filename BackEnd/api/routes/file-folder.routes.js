@@ -65,8 +65,8 @@ router.put('/:id', auth.AuthenticateToken,  Controller.upload)
 // append the user to be a collaborator to an existing file
 // the request body must contains the user id
 // only private file can be collaborated
-router.put('/api/append/user/:id', auth.AuthenticateToken, Controller.addCollaborator)
-
+router.put('/api/addColaborator/:id', auth.AuthenticateToken, Controller.addCollaborator)
+router.put('/api/removeColaborator/:id', auth.AuthenticateToken, Controller.removeCollaborator)
 // delete a file by id
 router.delete('/api/delete/:id', auth.AuthenticateToken, Controller.delete)
 

@@ -22,6 +22,7 @@ module.exports = new (class controller {
         this.download = this.download.bind(this)
         this.addCollaborator = this.addCollaborator.bind(this)
         this.getUserProperties = this.getUserProperties.bind(this)
+        this.removeCollaborator = this.removeCollaborator.bind(this)
 
         this.fileController = require('./files.controller');
         this.folderController = require('./folders.controller');
@@ -30,8 +31,7 @@ module.exports = new (class controller {
         this.db = require('../models');
         this.folderModel = this.db.folders;
         this.fileModel = this.db.files
-
-
+        this.users = this.db.users
 
 
     }
@@ -51,40 +51,40 @@ module.exports = new (class controller {
 
     async upload(req, res) {
 
-        // try {
+        try {
 
 
-        let idInfo = this.optionalFunction.IdChecker(req.params.id);
-        let result = null
+            let idInfo = this.optionalFunction.IdChecker(req.params.id);
+            let result = null
 
-        // check id of the folder
-        if (idInfo.isPrivate === true && await this.optionalFunction.isOwner(req.params.id, idInfo, req.user.id) === false) {
-            return this.send(req, res, this.optionalFunction.messageObject(
-                401,
-                false,
-                "you are not the owner"
-            ));
+            // check id of the folder
+            if (idInfo.isPrivate === true && await this.optionalFunction.isOwner(req.params.id, idInfo, req.user.id) === false) {
+                return this.send(req, res, this.optionalFunction.messageObject(
+                    401,
+                    false,
+                    "you are not the owner"
+                ));
+            }
+
+            // if text|file => create file using file model
+            if (idInfo.type === 'file') {
+                result = await this.fileController.writeFile(req.params.id, req.body)
+            } else {
+                console.log(idInfo)
+                result = await this.folderController.uploadFileToFolder(req.params.id, req.files.files, idInfo)
+            }
+
+            this.send(req, res, result)
+
+        } catch (error) {
+
+            this.send(req, res, {
+                success: false,
+                message: error.message,
+                code: 500
+            })
+
         }
-
-        // if text|file => create file using file model
-        if (idInfo.type === 'text' || idInfo.type === 'file') {
-            result = await this.fileController.writeFile(req.params.id, req.body.rawData)
-        } else {
-            console.log(idInfo)
-            result = await this.folderController.uploadFileToFolder(req.params.id, req.files.files, idInfo)
-        }
-
-        this.send(req, res, result)
-
-        // } catch (error) {
-
-        //     this.send(req, res, {
-        //         success: false,
-        //         message: error.message,
-        //         code: 500
-        //     })
-
-        // }
     }
 
 
@@ -92,7 +92,7 @@ module.exports = new (class controller {
     // add collaborator
     async addCollaborator(req, res) {
         try {
-            idInfo = this.optionalFunction.IdChecker(req.params.id);
+            let idInfo = this.optionalFunction.IdChecker(req.params.id);
             let result = null
 
             // incase the file is private but the user is not the owner
@@ -110,33 +110,39 @@ module.exports = new (class controller {
                         false,
                         "you can't add collaborator to a public file"
                     );
-                }
-                // get user by id
-                let user = await this.users.findOne({ username: req.body.username });
-
-                // if user not exist
-                if (user === null || user === undefined) {
-                    result = this.optionalFunction.messageObject(404, false, "user not found");
                 } else {
-                    if (idInfo.type === 'text' || idInfo.type === 'file') {
-                        await this.fileModel.updateOne(
-                            { _id: req.params.id },
-                            {
-                                $push: {
-                                    owner: user._id.toString()
-                                }
-                            });
+                    // get user by id
+                    let user = await this.users.findOne({ username: req.body.username });
+
+                    // if user not exist
+                    if (user === null || user === undefined) {
+                        result = this.optionalFunction.messageObject(404, false, "user not found");
+                    } else if (user._id.toString() === req.user.id) {
+                        result = this.optionalFunction.messageObject(401, false, "you can't add yourself, you already are the owner");
+
                     } else {
-                        await this.folderModel.updateOne(
-                            { _id: req.params.id },
-                            {
-                                $push: {
-                                    owner: user._id.toString()
-                                }
-                            });
+                        if (idInfo.type === 'file') {
+                            await this.fileModel.updateOne(
+                                { _id: req.params.id },
+                                {
+                                    $push: {
+                                        owner: user._id.toString()
+                                    }
+                                });
+                        } else {
+                            await this.folderModel.updateOne(
+                                { _id: req.params.id },
+                                {
+                                    $push: {
+                                        owner: user._id.toString()
+                                    }
+                                });
+                        }
+                        result = this.optionalFunction.messageObject(200, true, "success!");
                     }
-                    result = this.optionalFunction.messageObject(200, true, "success!");
+
                 }
+
             }
             this.send(req, res, result)
 
@@ -150,6 +156,68 @@ module.exports = new (class controller {
         }
     }
 
+
+    async removeCollaborator(req, res) {
+        try {
+            let idInfo = this.optionalFunction.IdChecker(req.params.id);
+            let result = null
+
+            // incase the file is private but the user is not the owner
+            if (idInfo.isPrivate === true && await this.optionalFunction.isOwner(req.params.id, idInfo, req.user.id) === false) {
+                result = this.optionalFunction.messageObject(
+                    401,
+                    false,
+                    "you are not the owner"
+
+                );
+            } else {
+                if (idInfo.isPrivate !== true) {
+                    result = this.optionalFunction.messageObject(
+                        401,
+                        false,
+                        "you can't add collaborator to a public file"
+                    );
+                } else {
+                    // get user by id
+                    let user = await this.users.findOne({ username: req.body.username });
+
+                    // if user not exist
+                    if (user === null || user === undefined) {
+                        result = this.optionalFunction.messageObject(404, false, "user not found");
+                    } else if (user._id.toString() === req.user.id) {
+                        result = this.optionalFunction.messageObject(401, false, `you can't remove yourself, try remove this ${idInfo.type} instead`);
+
+                    } else {
+                        if (idInfo.type === 'file') {
+                            await this.fileModel.updateOne(
+                                { _id: req.params.id },
+                                {
+                                    $pull: {
+                                        owner: user._id.toString()
+                                    }
+                                });
+                        } else {
+                            await this.folderModel.updateOne(
+                                { _id: req.params.id },
+                                {
+                                    $pull: {
+                                        owner: user._id.toString()
+                                    }
+                                });
+                        }
+                        result = this.optionalFunction.messageObject(200, true, "success!");
+                    }
+                }
+            }
+            this.send(req, res, result)
+        } catch (error) {
+            this.send(req, res, {
+                success: false,
+                message: error.message,
+                code: 500
+            })
+        }
+    }
 
 
 
@@ -203,48 +271,48 @@ module.exports = new (class controller {
 
     async get(req, res) {
 
-        // try {
+        try {
 
-        let timeInterval = this.getTimeInterval(req)
-        if (timeInterval[0] === false) {
-            return this.send(req, res, {
+            let timeInterval = this.getTimeInterval(req)
+            if (timeInterval[0] === false) {
+                return this.send(req, res, {
+                    success: false,
+                    message: "invalid time interval",
+                    code: 400
+                })
+            }
+            let timeFrom = timeInterval[1], timeTo = timeInterval[2]
+
+
+            // generate id.
+            let idInfo = this.optionalFunction.IdChecker(req.params.id);
+
+            // check id of the folder
+            if (idInfo.isPrivate === true && await this.optionalFunction.isOwner(req.params.id, idInfo, req.user.id) === false) {
+                return this.send(req, res, this.optionalFunction.messageObject(
+                    401,
+                    false,
+                    "you are not the owner"
+                ));
+            }
+
+
+            let result = null
+            // if text|file => create file using file model
+            if (idInfo.type === 'file') {
+                result = await this.fileController.getFileContent(req.params.id, timeFrom, timeTo)
+            } else {
+                result = await this.folderController.getFolderInformation(req.params.id, timeFrom, timeTo)
+            }
+
+            this.send(req, res, result)
+        } catch (error) {
+            this.send(req, res, {
                 success: false,
-                message: "invalid time interval",
-                code: 400
+                message: error.message,
+                code: 500
             })
         }
-        let timeFrom = timeInterval[1], timeTo = timeInterval[2]
-
-
-        // generate id.
-        let idInfo = this.optionalFunction.IdChecker(req.params.id);
-
-        // check id of the folder
-        if (idInfo.isPrivate === true && await this.optionalFunction.isOwner(req.params.id, idInfo, req.user.id) === false) {
-            return this.send(req, res, this.optionalFunction.messageObject(
-                401,
-                false,
-                "you are not the owner"
-            ));
-        }
-
-
-        let result = null
-        // if text|file => create file using file model
-        if (idInfo.type === 'text' || idInfo.type === 'file') {
-            result = await this.fileController.getFileContent(req.params.id, timeFrom, timeTo)
-        } else {
-            result = await this.folderController.getFolderInformation(req.params.id, timeFrom, timeTo)
-        }
-
-        this.send(req, res, result)
-        // } catch (error) {
-        //     this.send(req, res, {
-        //         success: false,
-        //         message: error.message,
-        //         code: 500
-        //     })
-        // }
     }
 
 
@@ -307,7 +375,7 @@ module.exports = new (class controller {
 
 
     async download(req, res) {
-        // try {
+        try {
 
             let timeInterval = this.getTimeInterval(req)
             if (timeInterval[0] === false) {
@@ -333,7 +401,7 @@ module.exports = new (class controller {
                 ));
             }
             // if text|file => create file using file model
-            if (idInfo.type === 'text' || idInfo.type === 'file') {
+            if (idInfo.type === 'file') {
                 result = await this.fileController.download(req.params.id, timeFrom, timeTo)
                 console.log(result)
                 res.attachment(result.message.name)
@@ -351,13 +419,13 @@ module.exports = new (class controller {
 
             }
 
-        // } catch (error) {
-        //     this.send(req, res, {
-        //         success: false,
-        //         message: error.message,
-        //         code: 500
-        //     })
-        // }
+        } catch (error) {
+            this.send(req, res, {
+                success: false,
+                message: error.message,
+                code: 500
+            })
+        }
     }
 
 
@@ -374,18 +442,18 @@ module.exports = new (class controller {
 
         if ((timeFrom !== undefined && timeTo === undefined) || (timeTo === undefined && timeTo !== undefined) || timeFrom > timeTo) {
             return [false]
-        }if (timeFrom === undefined && timeTo === undefined) {
+        } if (timeFrom === undefined && timeTo === undefined) {
             return [true, new Date(0), new Date(Date.now())]
         }
 
         return [true, timeFrom, timeTo]
     }
-    
+
 
 
     async delete(req, res) {
 
-        // try {
+        try {
 
             let timeInterval = this.getTimeInterval(req)
             if (timeInterval[0] === false) {
@@ -399,7 +467,7 @@ module.exports = new (class controller {
 
             // generate id.
             let idInfo = this.optionalFunction.IdChecker(req.params.id);
-            
+
 
             let result = null
 
@@ -412,7 +480,7 @@ module.exports = new (class controller {
                 ));
             }
 
-            if (idInfo.type === 'text' || idInfo.type === 'file') {
+            if (idInfo.type === 'file') {
                 result = await this.fileController.delete(req.params.id, timeFrom, timeTo)
             } else {
                 result = await this.folderController.delete(req.params.id, timeFrom, timeTo)
@@ -420,13 +488,13 @@ module.exports = new (class controller {
             this.send(req, res, result)
 
 
-        // } catch (error) {
-        //     this.send(req, res, {
-        //         success: false,
-        //         message: error.message,
-        //         code: 500
-        //     })
-        // }
+        } catch (error) {
+            this.send(req, res, {
+                success: false,
+                message: error.message,
+                code: 500
+            })
+        }
 
 
     }

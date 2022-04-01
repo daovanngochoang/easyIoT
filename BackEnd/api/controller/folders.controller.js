@@ -1,6 +1,5 @@
 
 const fs = require('fs');
-const os = require('os');
 const { v4: uuidv4 } = require('uuid')
 const AdmZip = require("adm-zip");
 const { default: mongoose } = require('mongoose');
@@ -45,13 +44,12 @@ module.exports = new class folderController {
 
     // append file to folder
     async uploadFileToFolder(id, Files, idInfo) {
-        console.log("????", idInfo)
 
 
         if (!Array.isArray(Files)) {
             Files = [Files]
         }
-        // check type of the files
+        // check type of the files, alow only json and txt
         for (let file of Files) {
 
             if (file.mimetype !== "text/plain" && file.mimetype !== "application/json") {
@@ -63,10 +61,10 @@ module.exports = new class folderController {
             }
         }
 
-
+        //  get the exist folder and allfiles in it
         let existFolder = await this.folderModel.findOne({ _id: id }).populate('files');
 
-
+        // if the folder is not exist then return error not found
         if (existFolder === null || existFolder === undefined) {
             return this.optionalFunction.messageObject(
                 404,
@@ -78,12 +76,14 @@ module.exports = new class folderController {
 
 
         let existFiles = Files.filter(file => {
-            //  filter out item exist in existing files name 
+            //  filter out item that is already exist in the folder
             return existFolder.files.some(existingFile => {
                 return existingFile.name === file.name
             })
         })
 
+
+        // send back to cli the files that already exist in the folder
         if (existFiles.length > 0) {
             return this.optionalFunction.messageObject(
                 400,
@@ -94,6 +94,8 @@ module.exports = new class folderController {
 
         let newFiles = []
         let newSize = 0
+
+        
         for (let file of Files) {
             let id = this.optionalFunction.IdGenerator({
                 type: "file",
@@ -101,14 +103,14 @@ module.exports = new class folderController {
 
             })
 
-
+            //  create new file object 
             let newFile = new this.fileModel({
                 _id: id,
                 name: file.name,
                 size: file.size,
                 owner: existFolder.owner,
                 contents: [
-                    await new this.contentModel({ // create new content object model
+                    await new this.contentModel({ // create new content object and save it
                         _id: new mongoose.Types.ObjectId(),
                         date: new Date(Date.now()).getTime(),
                         body: file.data,
@@ -117,19 +119,19 @@ module.exports = new class folderController {
                 createdAt: new Date(Date.now()).getTime(),
 
             })
-            newSize += file.size
-            await newFile.save()
-            newFiles.push(newFile)
+            newSize += file.size // get the new of the new files
+            await newFile.save() // save the new file
+            newFiles.push(newFile) // get the list of new files object to update to the folder 
         }
 
-        newSize += existFolder.size
+        newSize += existFolder.size // update the new size of the folder by adding to the new files size
 
-        if (Files.length !== 0) {
+        if (newFiles.length !== 0) {
             // add file information to database
             await this.folderModel.updateOne({ _id: id },
                 {
                     $inc: {
-                        quantity: Files.length
+                        quantity: newFiles.length
                     },
                     $set: {
                         size: newSize
@@ -166,19 +168,18 @@ module.exports = new class folderController {
         ).populate('files')
 
 
-        let files = []
+        let filesFiltered = [], remainFiles = []
+
         for (let file of folder.files) {
             let createdAt = new Date(file.createdAt).getTime()
             if (this.optionalFunction.isBetween(createdAt, from, to)) {
-                files.push(await file.populate('contents'))
+                filesFiltered.push(await file.populate('contents'))
+            }else{
+                remainFiles.push(await file.populate('contents'))
             }
         }
-        // the original files 
-        folder.allFiles = folder.files
-
-        // files that in the date range
-        folder.files = files
-
+        folder.files = filesFiltered
+        folder.remainFiles = remainFiles
 
         return folder
     }
@@ -298,9 +299,8 @@ module.exports = new class folderController {
             let newSize = folder.size - removeSize
             folder.size = newSize > 0 ? newSize : 0
 
-            folder.files = folder.allFiles.filter(file => {
-                return !folder.files.includes(file._id.toString())
-            })
+            folder.files = folder.remainFiles
+            folder.remainFiles = undefined
 
             // save the folder after remove files
             await folder.save()

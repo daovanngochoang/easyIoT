@@ -1,44 +1,63 @@
 
-Cannot read property 'success' of undefined  at: 31/3/2022 17:47:1
-Cannot read property 'files' of null  at: 31/3/2022 18:16:56
-unknown id  at: 31/3/2022 18:24:27
-Files is not iterable  at: 31/3/2022 18:25:11
-user is not exist  at: 31/3/2022 20:45:34
-Cannot read property 'some' of undefined  at: 31/3/2022 20:55:2
-Cannot read property 'includes' of undefined  at: 31/3/2022 21:0:20
-Date.now is not a constructor  at: 31/3/2022 21:25:6
-Date.now is not a constructor  at: 31/3/2022 21:25:36
-Cannot populate path `contents` because it is not in your schema. Set the `strictPopulate` option to false to override.  at: 31/3/2022 21:28:53
-Cannot populate path `contents` because it is not in your schema. Set the `strictPopulate` option to false to override.  at: 31/3/2022 21:31:31
-Cannot read property 'contents' of null  at: 31/3/2022 29:17:4
-Cannot read property 'contents' of null  at: 31/3/2022 29:17:42
-Cannot read property 'contents' of null  at: 31/3/2022 29:17:45
-Cannot read property 'contents' of null  at: 31/3/2022 29:18:23
-Cannot read property 'contents' of null  at: 31/3/2022 29:18:26
-Cannot read property 'contents' of null  at: 31/3/2022 29:19:17
-Cannot read property 'contents' of null  at: 31/3/2022 29:19:29
-Cannot read property 'contents' of null  at: 31/3/2022 29:19:30
-file not found  at: 31/3/2022 29:19:41
-file not found  at: 31/3/2022 29:21:6
-file not found  at: 31/3/2022 29:22:19
-file not found  at: 31/3/2022 29:23:15
-file not found  at: 31/3/2022 29:23:48
-Cannot read property 'contents' of null  at: 31/3/2022 29:25:14
-Cannot read property 'contents' of null  at: 31/3/2022 29:25:44
-Cannot read property 'contents' of null  at: 31/3/2022 29:32:28
-file not found  at: 31/3/2022 30:1:19
-invalid time interval  at: 31/3/2022 30:1:49
-file not found  at: 31/3/2022 30:1:57
-file content must be string or json   at: 1/4/2022 21:11:30
-this.fileController.downloadFile is not a function  at: 1/4/2022 21:24:29
-Cannot read property 'owner' of undefined  at: 1/4/2022 21:25:7
-file content must be string or json   at: 1/4/2022 21:45:27
-req is not defined  at: 1/4/2022 21:56:50
-file test.json,if i aint got u.txt,va ngay nao do.txt already exist in this folder  at: 1/4/2022 22:3:11
-file test.json,if i aint got u.txt,va ngay nao do.txt already exist in this folder  at: 1/4/2022 22:15:11
-file test.json,if i aint got u.txt,va ngay nao do.txt already exist in this folder  at: 1/4/2022 23:30:22
-file not found  at: 1/4/2022 24:32:6
-idInfo is not defined  at: 1/4/2022 24:33:40
-Cannot read property 'files' of null  at: 1/4/2022 24:34:22
-The "string" argument must be of type string or an instance of Buffer or ArrayBuffer. Received null  at: 1/4/2022 24:35:14
-file not found  at: 1/4/2022 24:44:46
+user is not exist  at: 2/4/2022 8:36:59
+file content must be string or json   at: 2/4/2022 8:55:2
+idInfo is not defined  at: 2/4/2022 9:16:6
+you can't add collaborator to a public file  at: 2/4/2022 9:16:41
+Cannot read property 'findOne' of undefined  at: 2/4/2022 9:17:50
+user not found  at: 2/4/2022 9:18:15
+you can't add yourself, you already are the owner  at: 2/4/2022 9:20:58
+you can't add yourself, you already are the owner  at: 2/4/2022 9:37:44
+you can't add yourself, you already are the owner  at: 2/4/2022 9:37:51
+you can't add yourself, you already are the owner  at: 2/4/2022 9:38:53
+you can't add yourself, you already are the owner  at: 2/4/2022 9:39:4
+you can't add yourself, you already are the owner  at: 2/4/2022 9:39:7
+you can't add yourself, you already are the owner  at: 2/4/2022 9:39:18
+you can't add yourself, you already are the owner  at: 2/4/2022 9:39:26
+you can't add yourself, you already are the owner  at: 2/4/2022 9:39:46
+you can't add yourself, you already are the owner  at: 2/4/2022 9:39:52
+you can't add yourself, you already are the owner  at: 2/4/2022 9:40:8
+you can't add yourself, you already are the owner  at: 2/4/2022 9:40:11
+you can't add yourself, you already are the owner  at: 2/4/2022 9:40:13
+you can't add yourself, you already are the owner  at: 2/4/2022 9:40:14
+you can't add yourself, you already are the owner  at: 2/4/2022 9:40:15
+you can't add yourself, you already are the owner  at: 2/4/2022 9:40:25
+you can't add yourself, you already are the owner  at: 2/4/2022 9:40:26
+you can't add yourself, you already are the owner  at: 2/4/2022 9:40:27
+you can't add yourself, you already are the owner  at: 2/4/2022 9:40:28
+you can't add yourself, you already are the owner  at: 2/4/2022 9:40:29
+you can't add yourself, you already are the owner  at: 2/4/2022 9:40:30
+you can't add yourself, you already are the owner  at: 2/4/2022 9:40:31
+you can't add yourself, you already are the owner  at: 2/4/2022 9:40:35
+you can't add yourself, you already are the owner  at: 2/4/2022 9:40:38
+you can't add yourself, you already are the owner  at: 2/4/2022 9:40:39
+you can't add yourself, you already are the owner  at: 2/4/2022 9:40:40
+you can't add yourself, you already are the owner  at: 2/4/2022 9:40:41
+you can't add yourself, you already are the owner  at: 2/4/2022 9:40:42
+you can't add yourself, you already are the owner  at: 2/4/2022 9:40:42
+you can't add yourself, you already are the owner  at: 2/4/2022 9:40:43
+you can't add yourself, you already are the owner  at: 2/4/2022 9:40:44
+you can't add yourself, you already are the owner  at: 2/4/2022 9:40:44
+you can't add yourself, you already are the owner  at: 2/4/2022 9:40:46
+you can't add yourself, you already are the owner  at: 2/4/2022 9:43:34
+you can't add yourself, you already are the owner  at: 2/4/2022 9:44:12
+you can't add yourself, you already are the owner  at: 2/4/2022 9:44:40
+you can't add yourself, you already are the owner  at: 2/4/2022 9:46:6
+you can't add yourself, you already are the owner  at: 2/4/2022 9:46:24
+you can't add yourself, you already are the owner  at: 2/4/2022 9:48:12
+you can't add yourself, you already are the owner  at: 2/4/2022 9:49:45
+you can't add yourself, you already are the owner  at: 2/4/2022 9:50:5
+you can't add yourself, you already are the owner  at: 2/4/2022 9:50:18
+you can't add yourself, you already are the owner  at: 2/4/2022 9:50:33
+you can't add yourself, you already are the owner  at: 2/4/2022 9:50:48
+you can't add yourself, you already are the owner  at: 2/4/2022 9:51:16
+you can't add yourself, you already are the owner  at: 2/4/2022 9:51:41
+you can't add yourself, you already are the owner  at: 2/4/2022 9:51:44
+you can't add yourself, you already are the owner  at: 2/4/2022 9:52:17
+you can't add yourself, you already are the owner  at: 2/4/2022 9:52:49
+you can't add yourself, you already are the owner  at: 2/4/2022 9:52:59
+you can't add yourself, you already are the owner  at: 2/4/2022 9:55:17
+you can't remove yourself, try remove fileinstead  at: 2/4/2022 9:56:45
+you can't remove yourself, try remove this file instead  at: 2/4/2022 9:56:56
+file test.json,if i aint got u.txt,va ngay nao do.txt already exist in this folder  at: 2/4/2022 10:20:35
+you can't remove yourself, try remove this folder instead  at: 2/4/2022 10:35:1
+you can't add yourself, you already are the owner  at: 2/4/2022 10:35:20

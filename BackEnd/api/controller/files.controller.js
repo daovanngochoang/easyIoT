@@ -18,7 +18,7 @@ module.exports = new (class fileController {
         // get the file content in the body of the request and 
         // if the file content in the body is not empty then check the file content in the request file
         let fileContent = rawData
-        let contentType = typeof fileContent;
+        let contentType = typeof rawData;
 
 
         if (contentType === "object") {
@@ -103,6 +103,7 @@ module.exports = new (class fileController {
         }
 
         let contentFiltered = [], remainContent = [];
+
         for (let content of fileData.contents) {
             if (this.optionalFunction.isBetween(content.date, timeFrom, timeTo)) {
                 contentFiltered.push(content);
@@ -171,7 +172,7 @@ module.exports = new (class fileController {
         let contents = "";
 
         for (let i = 0; i < fileContent.length; i++) {
-            contents += fileContent[i].body;
+            contents += fileContent[i].body + "\n\n";
         }
 
         let result = this.optionalFunction.messageObject(200, true, {

@@ -73,7 +73,7 @@ auth.Login = async function(req, res, next) {
         }else {
 
             const now = new Date().getTime()
-
+            console.log(now)
 
             // get id and username to create tokens
             const UserInfo = {id: user._id, last_time : now}
@@ -83,7 +83,6 @@ auth.Login = async function(req, res, next) {
 
             // if auth
             if (isAuth) {
-
 
                 // combine user info in the token and send to user
                 const token = jwt.sign(UserInfo, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '30m'});
@@ -151,9 +150,13 @@ auth.AuthenticateToken = async function(req, res, next) {
                 });
             };
 
+
             const last_time = info.last_time;
             const now = new Date().getTime()   
             const now_last_request = (now-last_time)/1000
+
+            console.log(now_last_request)
+            console.log((info.exp * 1000 - now)/1000)
 
             // if that user is using the token and that token will be expired then we refresh it for that use else
             // if that user not use that token in 5 min  before it expired then it will not be refresh
@@ -161,7 +164,8 @@ auth.AuthenticateToken = async function(req, res, next) {
                 
                 // get only the user info to create new token
                 const user = {
-                    id : info.id
+                    id : info.id,
+                    last_time: new Date().getTime()
                 };
 
                 // 
