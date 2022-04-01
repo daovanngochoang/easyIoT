@@ -1,0 +1,47 @@
+
+
+version: "2"
+
+services:
+  iot_database:
+    container_name: iot_database
+    image: mongo:5
+    restart: always
+    volumes:
+      - IOT-persistent-data:/data/db
+    # environment:
+    # - MONGO_INITDB_ROOT_USERNAME=root
+    # - MONGO_INITDB_ROOT_PASSWORD=iot@123
+    ports:
+      - 27017:27017
+
+
+  iot_project:
+    # image: andreasalexander/iot_project:latest
+    container_name: iot_project
+    build: .
+    volumes:
+      - node_modules:/app/node_modules
+      - ./logs:/app/logs
+    ports:
+      - "5000:5000"
+      - "8080:8080"
+    depends_on:
+      - iot_database
+    volumes_from:
+      - iot_database
+    links:
+      - iot_database
+
+
+volumes:
+  IOT-persistent-data:
+    external: true
+    name: IOT-persistent-data
+  node_modules:
+    external: true
+    name: node_modules
+
+networks:
+  default:
+    name: IOT-network  

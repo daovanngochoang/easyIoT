@@ -1,0 +1,44 @@
+
+Cannot read property 'success' of undefined  at: 31/3/2022 17:47:1
+Cannot read property 'files' of null  at: 31/3/2022 18:16:56
+unknown id  at: 31/3/2022 18:24:27
+Files is not iterable  at: 31/3/2022 18:25:11
+user is not exist  at: 31/3/2022 20:45:34
+Cannot read property 'some' of undefined  at: 31/3/2022 20:55:2
+Cannot read property 'includes' of undefined  at: 31/3/2022 21:0:20
+Date.now is not a constructor  at: 31/3/2022 21:25:6
+Date.now is not a constructor  at: 31/3/2022 21:25:36
+Cannot populate path `contents` because it is not in your schema. Set the `strictPopulate` option to false to override.  at: 31/3/2022 21:28:53
+Cannot populate path `contents` because it is not in your schema. Set the `strictPopulate` option to false to override.  at: 31/3/2022 21:31:31
+Cannot read property 'contents' of null  at: 31/3/2022 29:17:4
+Cannot read property 'contents' of null  at: 31/3/2022 29:17:42
+Cannot read property 'contents' of null  at: 31/3/2022 29:17:45
+Cannot read property 'contents' of null  at: 31/3/2022 29:18:23
+Cannot read property 'contents' of null  at: 31/3/2022 29:18:26
+Cannot read property 'contents' of null  at: 31/3/2022 29:19:17
+Cannot read property 'contents' of null  at: 31/3/2022 29:19:29
+Cannot read property 'contents' of null  at: 31/3/2022 29:19:30
+file not found  at: 31/3/2022 29:19:41
+file not found  at: 31/3/2022 29:21:6
+file not found  at: 31/3/2022 29:22:19
+file not found  at: 31/3/2022 29:23:15
+file not found  at: 31/3/2022 29:23:48
+Cannot read property 'contents' of null  at: 31/3/2022 29:25:14
+Cannot read property 'contents' of null  at: 31/3/2022 29:25:44
+Cannot read property 'contents' of null  at: 31/3/2022 29:32:28
+file not found  at: 31/3/2022 30:1:19
+invalid time interval  at: 31/3/2022 30:1:49
+file not found  at: 31/3/2022 30:1:57
+file content must be string or json   at: 1/4/2022 21:11:30
+this.fileController.downloadFile is not a function  at: 1/4/2022 21:24:29
+Cannot read property 'owner' of undefined  at: 1/4/2022 21:25:7
+file content must be string or json   at: 1/4/2022 21:45:27
+req is not defined  at: 1/4/2022 21:56:50
+file test.json,if i aint got u.txt,va ngay nao do.txt already exist in this folder  at: 1/4/2022 22:3:11
+file test.json,if i aint got u.txt,va ngay nao do.txt already exist in this folder  at: 1/4/2022 22:15:11
+file test.json,if i aint got u.txt,va ngay nao do.txt already exist in this folder  at: 1/4/2022 23:30:22
+file not found  at: 1/4/2022 24:32:6
+idInfo is not defined  at: 1/4/2022 24:33:40
+Cannot read property 'files' of null  at: 1/4/2022 24:34:22
+The "string" argument must be of type string or an instance of Buffer or ArrayBuffer. Received null  at: 1/4/2022 24:35:14
+file not found  at: 1/4/2022 24:44:46
